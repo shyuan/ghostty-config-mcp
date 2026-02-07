@@ -1,7 +1,10 @@
 /**
- * Bun.spawn wrapper for ghostty CLI execution.
+ * CLI executor for ghostty commands.
+ * Uses node:child_process for Bun + Node.js compatibility.
  * NEVER writes to process.stdout (reserved for stdio MCP transport).
  */
+
+import { execFile } from "node:child_process";
 
 export interface ExecResult {
   stdout: string;
@@ -9,25 +12,17 @@ export interface ExecResult {
   exitCode: number;
 }
 
-export async function exec(
+export function exec(
   args: string[],
   timeoutMs = 10_000,
 ): Promise<ExecResult> {
-  const proc = Bun.spawn(["ghostty", ...args], {
-    stdout: "pipe",
-    stderr: "pipe",
+  return new Promise((resolve) => {
+    execFile("ghostty", args, { timeout: timeoutMs, maxBuffer: 10 * 1024 * 1024 }, (error, stdout, stderr) => {
+      resolve({
+        stdout: stdout ?? "",
+        stderr: stderr ?? "",
+        exitCode: error && "code" in error ? (error.code as number) ?? 1 : error ? 1 : 0,
+      });
+    });
   });
-
-  const timer = setTimeout(() => proc.kill(), timeoutMs);
-
-  try {
-    const [stdout, stderr] = await Promise.all([
-      new Response(proc.stdout).text(),
-      new Response(proc.stderr).text(),
-    ]);
-    const exitCode = await proc.exited;
-    return { stdout, stderr, exitCode };
-  } finally {
-    clearTimeout(timer);
-  }
 }

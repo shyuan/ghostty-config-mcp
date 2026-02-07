@@ -1,8 +1,32 @@
 {
   "name": "ghostty-config-mcp",
-  "module": "index.ts",
+  "version": "1.0.0",
+  "description": "MCP server for Ghostty terminal configuration management",
   "type": "module",
-  "private": true,
+  "bin": {
+    "ghostty-config-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bun build src/index.ts --target=node --outfile=dist/index.js",
+    "dev": "bun run src/index.ts"
+  },
+  "keywords": [
+    "ghostty",
+    "terminal",
+    "config",
+    "mcp",
+    "model-context-protocol"
+  ],
+  "license": "MIT",
+  "author": "Chris Yuan",
+  "homepage": "https://github.com/shyuan/ghostty-config-mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shyuan/ghostty-config-mcp.git"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
