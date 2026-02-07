@@ -21,7 +21,7 @@
     "model-context-protocol"
   ],
   "license": "MIT",
-  "author": "Chris Yuan",
+  "author": "Chris Yuan <chris.yuan@0x0.tw>",
   "homepage": "https://github.com/shyuan/ghostty-config-mcp",
   "repository": {
     "type": "git",
